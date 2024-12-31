@@ -13,7 +13,7 @@ pub const SCREEN_HEIGHT: f32 = 720.0;
 const TICK_TIME: f64 = 1.0 / 60.0;
 
 #[derive(Component)]
-struct Clickable;
+pub struct Clickable;
 
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum GameState {
