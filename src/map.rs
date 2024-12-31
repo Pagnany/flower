@@ -21,8 +21,8 @@ pub fn create_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         crate::Clickable,
         flower::Flower {
             id: 2,
-            name: "Rose".to_string(),
-            flower_type: "Red".to_string(),
+            name: "Lily".to_string(),
+            flower_type: "White".to_string(),
             px_height: 50.0,
             px_width: 50.0,
         },
@@ -33,8 +33,8 @@ pub fn create_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         crate::Clickable,
         flower::Flower {
             id: 3,
-            name: "Rose".to_string(),
-            flower_type: "Red".to_string(),
+            name: "Carnation".to_string(),
+            flower_type: "Pink".to_string(),
             px_height: 50.0,
             px_width: 50.0,
         },
@@ -45,8 +45,8 @@ pub fn create_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         crate::Clickable,
         flower::Flower {
             id: 4,
-            name: "Rose".to_string(),
-            flower_type: "Red".to_string(),
+            name: "Cornflower".to_string(),
+            flower_type: "Blue".to_string(),
             px_height: 50.0,
             px_width: 50.0,
         },

@@ -7,6 +7,7 @@ pub mod input;
 pub mod map;
 pub mod save;
 pub mod system;
+pub mod ui;
 
 pub const SCREEN_WIDTH: f32 = 1280.0;
 pub const SCREEN_HEIGHT: f32 = 720.0;
@@ -53,6 +54,23 @@ fn main() {
     app.run();
 }
 
-fn setup(mut commands: Commands) {
+fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let time = chrono::Utc::now();
+
+    let font = asset_server.load("fonts/FiraSans-Bold.ttf");
+    let text_font = TextFont {
+        font: font.clone(),
+        font_size: 15.0,
+        ..default()
+    };
+    let text_justification = JustifyText::Left;
+
     commands.spawn(Camera2d);
+
+    commands.spawn((
+        Text2d::new(time.format("%Y-%m-%d %H:%M:%S").to_string()),
+        text_font.clone(),
+        TextLayout::new_with_justify(text_justification),
+        Transform::from_translation(Vec3::new(0.0, crate::SCREEN_HEIGHT / 2.0 - 15.0, 0.0)),
+    ));
 }
