@@ -48,7 +48,11 @@ fn main() {
     app.add_systems(Startup, setup);
     app.add_systems(
         FixedUpdate,
-        (system::kill_game_on_esc, input::input_mouse_button),
+        (
+            system::kill_game_on_esc,
+            input::input_mouse_button,
+            ui::text_update_time,
+        ),
     );
     app.add_systems(OnEnter(GameState::Overview), map::create_map);
     app.run();
