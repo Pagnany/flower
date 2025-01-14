@@ -14,7 +14,6 @@ pub fn create_map(mut commands: Commands, asset_server: Res<AssetServer>) {
             px_width: 50.0,
         },
     ));
-
     commands.spawn((
         Sprite::from_image(asset_server.load("r.png")),
         Transform::from_xyz(-100.0, 0.0, 0.0),

@@ -1,6 +1,7 @@
 use bevy::asset::{AssetMetaCheck, AssetPlugin};
 use bevy::{diagnostic::FrameTimeDiagnosticsPlugin, prelude::*};
 use bevy_common_assets::json::JsonAssetPlugin;
+use bevy_simple_text_input::{TextInput, TextInputPlugin};
 
 pub mod flower;
 pub mod input;
@@ -15,6 +16,13 @@ const TICK_TIME: f64 = 1.0 / 60.0;
 
 #[derive(Component)]
 pub struct Clickable;
+
+#[derive(Component)]
+pub struct PlayerInfo {
+    pub id: i32,
+    pub name: String,
+    pub token: String,
+}
 
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum GameState {
@@ -42,6 +50,7 @@ fn main() {
             }),
         FrameTimeDiagnosticsPlugin,
         JsonAssetPlugin::<save::SaveFile>::new(&["save.json"]),
+        TextInputPlugin,
     ));
     app.insert_resource(Time::<Fixed>::from_seconds(TICK_TIME));
     app.insert_state(GameState::Overview);
@@ -70,11 +79,27 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     let text_justification = JustifyText::Left;
 
     commands.spawn(Camera2d);
+    commands.spawn(PlayerInfo {
+        id: 1,
+        name: "Player1".to_string(),
+        token: "".to_string(),
+    });
 
     commands.spawn((
         Text2d::new(time.format("%Y-%m-%d %H:%M:%S").to_string()),
         text_font.clone(),
         TextLayout::new_with_justify(text_justification),
         Transform::from_translation(Vec3::new(0.0, crate::SCREEN_HEIGHT / 2.0 - 15.0, 0.0)),
+    ));
+
+    commands.spawn((
+        Node {
+            left: Val::Px(crate::SCREEN_WIDTH / 2.0 - 150.),
+            top: Val::Px(200.),
+            width: Val::Px(300.),
+            ..default()
+        },
+        BackgroundColor(Color::srgb(0.1, 0.1, 0.1)),
+        TextInput,
     ));
 }
