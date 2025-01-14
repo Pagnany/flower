@@ -21,6 +21,7 @@ pub struct Clickable;
 pub struct PlayerInfo {
     pub id: i32,
     pub name: String,
+    pub password: String,
     pub token: String,
 }
 
@@ -87,7 +88,8 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(Camera2d);
     commands.spawn(PlayerInfo {
         id: 1,
-        name: "Player1".to_string(),
+        name: "".to_string(),
+        password: "".to_string(),
         token: "".to_string(),
     });
 
