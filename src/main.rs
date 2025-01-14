@@ -1,7 +1,7 @@
 use bevy::asset::{AssetMetaCheck, AssetPlugin};
 use bevy::{diagnostic::FrameTimeDiagnosticsPlugin, prelude::*};
 use bevy_common_assets::json::JsonAssetPlugin;
-use bevy_simple_text_input::{TextInput, TextInputPlugin};
+use bevy_simple_text_input::{TextInputPlugin, TextInputSystem};
 
 pub mod flower;
 pub mod input;
@@ -27,6 +27,7 @@ pub struct PlayerInfo {
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum GameState {
     LoadingScreen,
+    Login,
     MainMenu,
     Overview,
     ShowFlower,
@@ -53,7 +54,7 @@ fn main() {
         TextInputPlugin,
     ));
     app.insert_resource(Time::<Fixed>::from_seconds(TICK_TIME));
-    app.insert_state(GameState::Overview);
+    app.insert_state(GameState::Login);
     app.add_systems(Startup, setup);
     app.add_systems(
         FixedUpdate,
@@ -63,6 +64,11 @@ fn main() {
             ui::text_update_time,
         ),
     );
+    app.add_systems(
+        Update,
+        crate::ui::text_input_listener.after(TextInputSystem),
+    );
+    app.add_systems(OnEnter(GameState::Login), ui::create_login_ui);
     app.add_systems(OnEnter(GameState::Overview), map::create_map);
     app.run();
 }
@@ -90,16 +96,6 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         text_font.clone(),
         TextLayout::new_with_justify(text_justification),
         Transform::from_translation(Vec3::new(0.0, crate::SCREEN_HEIGHT / 2.0 - 15.0, 0.0)),
-    ));
-
-    commands.spawn((
-        Node {
-            left: Val::Px(crate::SCREEN_WIDTH / 2.0 - 150.),
-            top: Val::Px(200.),
-            width: Val::Px(300.),
-            ..default()
-        },
-        BackgroundColor(Color::srgb(0.1, 0.1, 0.1)),
-        TextInput,
+        crate::ui::DateTimeText,
     ));
 }
