@@ -1,9 +1,12 @@
 use bevy::asset::{AssetMetaCheck, AssetPlugin};
+use bevy::time::common_conditions::on_timer;
 use bevy::{diagnostic::FrameTimeDiagnosticsPlugin, prelude::*};
 use bevy_common_assets::json::JsonAssetPlugin;
+use bevy_http_client::prelude::*;
 use bevy_simple_text_input::{TextInputPlugin, TextInputSystem};
 
 pub mod flower;
+pub mod http;
 pub mod input;
 pub mod map;
 pub mod save;
@@ -53,6 +56,7 @@ fn main() {
         FrameTimeDiagnosticsPlugin,
         JsonAssetPlugin::<save::SaveFile>::new(&["save.json"]),
         TextInputPlugin,
+        HttpClientPlugin,
     ));
     app.insert_resource(Time::<Fixed>::from_seconds(TICK_TIME));
     app.insert_state(GameState::Login);
@@ -67,10 +71,18 @@ fn main() {
     );
     app.add_systems(
         Update,
-        crate::ui::text_input_listener.after(TextInputSystem),
+        (
+            ui::text_input_listener.after(TextInputSystem),
+            http::test_handle_response,
+        ),
+    );
+    app.add_systems(
+        Update,
+        http::test_send_request.run_if(on_timer(std::time::Duration::from_secs(1))),
     );
     app.add_systems(OnEnter(GameState::Login), ui::create_login_ui);
     app.add_systems(OnEnter(GameState::Overview), map::create_map);
+    app.register_request_type::<http::IpInfo>();
     app.run();
 }
 
@@ -97,7 +109,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         Text2d::new(time.format("%Y-%m-%d %H:%M:%S").to_string()),
         text_font.clone(),
         TextLayout::new_with_justify(text_justification),
-        Transform::from_translation(Vec3::new(0.0, crate::SCREEN_HEIGHT / 2.0 - 15.0, 0.0)),
-        crate::ui::DateTimeText,
+        Transform::from_translation(Vec3::new(0.0, SCREEN_HEIGHT / 2.0 - 15.0, 0.0)),
+        ui::DateTimeText,
     ));
 }
