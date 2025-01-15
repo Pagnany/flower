@@ -73,16 +73,16 @@ fn main() {
         Update,
         (
             ui::text_input_listener.after(TextInputSystem),
-            http::test_handle_response,
+            http::handle_response_login,
         ),
     );
     app.add_systems(
         Update,
-        http::test_send_request.run_if(on_timer(std::time::Duration::from_secs(1))),
+        http::send_request_login.run_if(on_timer(std::time::Duration::from_secs(1))),
     );
     app.add_systems(OnEnter(GameState::Login), ui::create_login_ui);
     app.add_systems(OnEnter(GameState::Overview), map::create_map);
-    app.register_request_type::<http::IpInfo>();
+    app.register_request_type::<http::LoginData>();
     app.run();
 }
 

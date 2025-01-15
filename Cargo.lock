@@ -2078,6 +2078,7 @@ dependencies = [
  "bevy_simple_text_input",
  "chrono",
  "serde",
+ "serde_json",
 ]
 
 [[package]]

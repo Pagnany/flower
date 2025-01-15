@@ -60,14 +60,15 @@ pub fn text_input_listener(
     mut q_text_caption: Query<&mut Text2d, (With<LoginCaption>, Without<LoginTextName>)>,
 ) {
     for event in events.read() {
-        //info!("{:?} submitted: {}", event.entity, event.value);
-        let mut player_info = q_player.single_mut();
-
         if !event.value.is_empty() {
+            let mut player_info = q_player.single_mut();
+
             if player_info.name.is_empty() {
                 player_info.name = event.value.clone();
+
                 let mut text = q_text_name.single_mut();
                 *text = Text2d::new(player_info.name.clone());
+
                 let mut text = q_text_caption.single_mut();
                 *text = Text2d::new("Password".to_string());
             } else {
