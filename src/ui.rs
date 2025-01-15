@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_http_client::prelude::*;
 use bevy_simple_text_input::{TextInput, TextInputSubmitEvent};
 
 #[derive(Component)]
@@ -58,6 +59,7 @@ pub fn text_input_listener(
     mut q_player: Query<&mut crate::PlayerInfo>,
     mut q_text_name: Query<&mut Text2d, (With<LoginTextName>, Without<LoginCaption>)>,
     mut q_text_caption: Query<&mut Text2d, (With<LoginCaption>, Without<LoginTextName>)>,
+    mut ev_request: EventWriter<TypedRequest<crate::http::LoginData>>,
 ) {
     for event in events.read() {
         if !event.value.is_empty() {
@@ -73,9 +75,18 @@ pub fn text_input_listener(
                 *text = Text2d::new("Password".to_string());
             } else {
                 player_info.password = event.value.clone();
-                info!("Player: {}", player_info.name);
-                info!("Password: {}", player_info.password);
-                // online token from server
+
+                // request token from server
+                let login = crate::http::Login {
+                    username: player_info.name.clone(),
+                    password: player_info.password.clone(),
+                };
+                ev_request.send(
+                    HttpClient::new()
+                        .post("http://api.pagnany.de")
+                        .json(&login)
+                        .with_type::<crate::http::LoginData>(),
+                );
             }
         }
     }

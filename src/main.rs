@@ -1,5 +1,4 @@
 use bevy::asset::{AssetMetaCheck, AssetPlugin};
-use bevy::time::common_conditions::on_timer;
 use bevy::{diagnostic::FrameTimeDiagnosticsPlugin, prelude::*};
 use bevy_common_assets::json::JsonAssetPlugin;
 use bevy_http_client::prelude::*;
@@ -67,19 +66,10 @@ fn main() {
             system::kill_game_on_esc,
             input::input_mouse_button,
             ui::text_update_time,
-        ),
-    );
-    app.add_systems(
-        Update,
-        (
-            ui::text_input_listener.after(TextInputSystem),
             http::handle_response_login,
         ),
     );
-    app.add_systems(
-        Update,
-        http::send_request_login.run_if(on_timer(std::time::Duration::from_secs(1))),
-    );
+    app.add_systems(Update, (ui::text_input_listener.after(TextInputSystem),));
     app.add_systems(OnEnter(GameState::Login), ui::create_login_ui);
     app.add_systems(OnEnter(GameState::Overview), map::create_map);
     app.register_request_type::<http::LoginData>();
@@ -98,6 +88,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     let text_justification = JustifyText::Left;
 
     commands.spawn(Camera2d);
+
     commands.spawn(PlayerInfo {
         id: 1,
         name: "".to_string(),
