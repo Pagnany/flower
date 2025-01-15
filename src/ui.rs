@@ -17,6 +17,23 @@ pub fn text_update_time(mut text_query: Query<&mut Text2d, With<DateTimeText>>) 
     *text = Text2d::new(time.format("%Y-%m-%d %H:%M:%S").to_string());
 }
 
+pub fn destroy_login_ui(
+    mut commands: Commands,
+    q: Query<Entity, With<LoginCaption>>,
+    q2: Query<Entity, With<LoginTextName>>,
+    q3: Query<Entity, With<TextInput>>,
+) {
+    for entity in q.iter() {
+        commands.entity(entity).despawn_recursive();
+    }
+    for entity in q2.iter() {
+        commands.entity(entity).despawn_recursive();
+    }
+    for entity in q3.iter() {
+        commands.entity(entity).despawn_recursive();
+    }
+}
+
 pub fn create_login_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
     let font = asset_server.load("fonts/FiraSans-Bold.ttf");
     let text_font = TextFont {

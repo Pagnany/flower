@@ -30,13 +30,13 @@ pub fn send_request_login(mut ev_request: EventWriter<TypedRequest<LoginData>>) 
 pub fn handle_response_login(
     mut ev_response: EventReader<TypedResponse<LoginData>>,
     mut q_player_info: Query<&mut crate::PlayerInfo>,
+    mut next_state: ResMut<NextState<crate::GameState>>,
 ) {
     for response in ev_response.read() {
-        println!("ID: {}", response.id);
-        println!("Token: {}", response.token);
-
         let mut player_info = q_player_info.single_mut();
         player_info.id = response.id.parse().unwrap();
         player_info.token = response.token.clone();
+
+        next_state.set(crate::GameState::Overview);
     }
 }

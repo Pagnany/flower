@@ -70,15 +70,15 @@ fn main() {
         ),
     );
     app.add_systems(Update, (ui::text_input_listener.after(TextInputSystem),));
+
     app.add_systems(OnEnter(GameState::Login), ui::create_login_ui);
+    app.add_systems(OnExit(GameState::Login), ui::destroy_login_ui);
     app.add_systems(OnEnter(GameState::Overview), map::create_map);
     app.register_request_type::<http::LoginData>();
     app.run();
 }
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let time = chrono::Utc::now();
-
     let font = asset_server.load("fonts/FiraSans-Bold.ttf");
     let text_font = TextFont {
         font: font.clone(),
@@ -90,14 +90,14 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(Camera2d);
 
     commands.spawn(PlayerInfo {
-        id: 1,
+        id: 0,
         name: "".to_string(),
         password: "".to_string(),
         token: "".to_string(),
     });
 
     commands.spawn((
-        Text2d::new(time.format("%Y-%m-%d %H:%M:%S").to_string()),
+        Text2d::new("".to_string()),
         text_font.clone(),
         TextLayout::new_with_justify(text_justification),
         Transform::from_translation(Vec3::new(0.0, SCREEN_HEIGHT / 2.0 - 15.0, 0.0)),
