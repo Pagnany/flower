@@ -23,15 +23,12 @@ pub fn destroy_login_ui(
     q2: Query<Entity, With<LoginTextName>>,
     q3: Query<Entity, With<TextInput>>,
 ) {
-    for entity in q.iter() {
-        commands.entity(entity).despawn_recursive();
-    }
-    for entity in q2.iter() {
-        commands.entity(entity).despawn_recursive();
-    }
-    for entity in q3.iter() {
-        commands.entity(entity).despawn_recursive();
-    }
+    q.iter()
+        .for_each(|entity| commands.entity(entity).despawn_recursive());
+    q2.iter()
+        .for_each(|entity| commands.entity(entity).despawn_recursive());
+    q3.iter()
+        .for_each(|entity| commands.entity(entity).despawn_recursive());
 }
 
 pub fn create_login_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
@@ -61,7 +58,7 @@ pub fn create_login_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
 
     commands.spawn((
         Node {
-            left: Val::Px(crate::SCREEN_WIDTH / 2.0 - 150.),
+            left: Val::Px(crate::SCREEN_WIDTH / 2.0 - 150.0),
             top: Val::Px(400.),
             width: Val::Px(300.),
             ..default()
@@ -73,15 +70,13 @@ pub fn create_login_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 pub fn text_input_listener(
     mut events: EventReader<TextInputSubmitEvent>,
-    mut q_player: Query<&mut crate::PlayerInfo>,
+    mut player_info: ResMut<crate::PlayerInfo>,
     mut q_text_name: Query<&mut Text2d, (With<LoginTextName>, Without<LoginCaption>)>,
     mut q_text_caption: Query<&mut Text2d, (With<LoginCaption>, Without<LoginTextName>)>,
     mut ev_request: EventWriter<TypedRequest<crate::http::LoginData>>,
 ) {
     for event in events.read() {
         if !event.value.is_empty() {
-            let mut player_info = q_player.single_mut();
-
             if player_info.name.is_empty() {
                 player_info.name = event.value.clone();
 

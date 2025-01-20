@@ -19,7 +19,7 @@ const TICK_TIME: f64 = 1.0 / 60.0;
 #[derive(Component)]
 pub struct Clickable;
 
-#[derive(Component)]
+#[derive(Resource, Default)]
 pub struct PlayerInfo {
     pub id: i32,
     pub name: String,
@@ -59,6 +59,7 @@ fn main() {
     ));
     app.insert_resource(Time::<Fixed>::from_seconds(TICK_TIME));
     app.insert_state(GameState::Login);
+    app.insert_resource(PlayerInfo::default());
     app.add_systems(Startup, setup);
     app.add_systems(
         FixedUpdate,
@@ -88,13 +89,6 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     let text_justification = JustifyText::Left;
 
     commands.spawn(Camera2d);
-
-    commands.spawn(PlayerInfo {
-        id: 0,
-        name: "".to_string(),
-        password: "".to_string(),
-        token: "".to_string(),
-    });
 
     commands.spawn((
         Text2d::new("".to_string()),

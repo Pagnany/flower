@@ -3,3 +3,6 @@ Blumengarten
 - Schöne und ausgefallene Blumen
 - Geld durch Blumenverkauf und Bilderverkauf
 - Geld durch Wettbewerbe der schönsten Blumen/Blumensträuße
+
+Low Power Mode
+https://bevyengine.org/examples/window/low-power/
