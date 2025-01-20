@@ -21,7 +21,7 @@ pub fn send_request_login(mut ev_request: EventWriter<TypedRequest<LoginData>>) 
     };
     ev_request.send(
         HttpClient::new()
-            .post("http://api.pagnany.de")
+            .post("https://pagnany.de/flower-api.php")
             .json(&login)
             .with_type::<LoginData>(),
     );

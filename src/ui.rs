@@ -100,7 +100,7 @@ pub fn text_input_listener(
                 };
                 ev_request.send(
                     HttpClient::new()
-                        .post("http://api.pagnany.de")
+                        .post("https://pagnany.de/flower-api.php")
                         .json(&login)
                         .with_type::<crate::http::LoginData>(),
                 );
