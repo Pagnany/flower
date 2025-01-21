@@ -1,5 +1,8 @@
 use bevy::asset::{AssetMetaCheck, AssetPlugin};
-use bevy::{diagnostic::FrameTimeDiagnosticsPlugin, prelude::*};
+use bevy::{
+    diagnostic::FrameTimeDiagnosticsPlugin, prelude::*, utils::Duration, window::WindowPlugin,
+    winit::WinitSettings,
+};
 use bevy_common_assets::json::JsonAssetPlugin;
 use bevy_http_client::prelude::*;
 use bevy_simple_text_input::{TextInputPlugin, TextInputSystem};
@@ -57,6 +60,11 @@ fn main() {
         TextInputPlugin,
         HttpClientPlugin,
     ));
+    app.insert_resource(WinitSettings {
+        focused_mode: bevy::winit::UpdateMode::Continuous,
+        unfocused_mode: bevy::winit::UpdateMode::reactive_low_power(Duration::from_millis(2000)),
+    });
+
     app.insert_resource(Time::<Fixed>::from_seconds(TICK_TIME));
     app.insert_state(GameState::Login);
     app.insert_resource(PlayerInfo::default());
