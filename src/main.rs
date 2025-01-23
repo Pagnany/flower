@@ -9,11 +9,12 @@ use bevy_simple_text_input::{TextInputPlugin, TextInputSystem};
 
 pub mod flower;
 pub mod http;
-pub mod input;
 pub mod map;
 pub mod save;
 pub mod system;
 pub mod ui;
+pub mod ui_login;
+pub mod ui_overview;
 
 pub const SCREEN_WIDTH: f32 = 1280.0;
 pub const SCREEN_HEIGHT: f32 = 720.0;
@@ -64,24 +65,25 @@ fn main() {
         focused_mode: bevy::winit::UpdateMode::Continuous,
         unfocused_mode: bevy::winit::UpdateMode::reactive_low_power(Duration::from_millis(2000)),
     });
-
     app.insert_resource(Time::<Fixed>::from_seconds(TICK_TIME));
-    app.insert_state(GameState::Login);
+    app.insert_state(GameState::Overview);
     app.insert_resource(PlayerInfo::default());
     app.add_systems(Startup, setup);
     app.add_systems(
         FixedUpdate,
         (
             system::kill_game_on_esc,
-            input::input_mouse_button,
+            ui_overview::input_mouse_button,
             ui::text_update_time,
             http::handle_response_login,
         ),
     );
-    app.add_systems(Update, (ui::text_input_listener.after(TextInputSystem),));
-
-    app.add_systems(OnEnter(GameState::Login), ui::create_login_ui);
-    app.add_systems(OnExit(GameState::Login), ui::destroy_login_ui);
+    app.add_systems(
+        Update,
+        (ui_login::text_input_listener.after(TextInputSystem),),
+    );
+    app.add_systems(OnEnter(GameState::Login), ui_login::create_login_ui);
+    app.add_systems(OnExit(GameState::Login), ui_login::destroy_login_ui);
     app.add_systems(OnEnter(GameState::Overview), map::create_map);
     app.register_request_type::<http::LoginData>();
     app.run();
