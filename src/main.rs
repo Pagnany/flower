@@ -1,7 +1,7 @@
 use bevy::asset::{AssetMetaCheck, AssetPlugin};
 use bevy::{
-    diagnostic::FrameTimeDiagnosticsPlugin, prelude::*, utils::Duration, window::WindowPlugin,
-    winit::WinitSettings,
+    diagnostic::FrameTimeDiagnosticsPlugin, prelude::*, utils::Duration, window::EnabledButtons,
+    window::WindowPlugin, winit::WinitSettings,
 };
 use bevy_common_assets::json::JsonAssetPlugin;
 use bevy_http_client::prelude::*;
@@ -48,6 +48,12 @@ fn main() {
                 primary_window: Some(Window {
                     title: "flower".into(),
                     resolution: (SCREEN_WIDTH, SCREEN_HEIGHT).into(),
+                    resizable: false,
+                    enabled_buttons: EnabledButtons {
+                        minimize: true,
+                        maximize: false,
+                        close: true,
+                    },
                     ..default()
                 }),
                 ..default()
@@ -66,7 +72,7 @@ fn main() {
         unfocused_mode: bevy::winit::UpdateMode::reactive_low_power(Duration::from_millis(2000)),
     });
     app.insert_resource(Time::<Fixed>::from_seconds(TICK_TIME));
-    app.insert_state(GameState::Overview);
+    app.insert_state(GameState::Login);
     app.insert_resource(PlayerInfo::default());
     app.add_systems(Startup, setup);
     app.add_systems(

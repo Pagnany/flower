@@ -5,7 +5,7 @@ use bevy::window::PrimaryWindow;
 
 #[derive(Component)]
 pub enum OverviewClickable {
-    Flower(usize),
+    Flower(i32),
     BtnWater,
     BtnFertilize,
     BtnHarvest,
