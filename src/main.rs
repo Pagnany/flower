@@ -5,6 +5,7 @@ use bevy::{
 };
 use bevy_common_assets::json::JsonAssetPlugin;
 use bevy_http_client::prelude::*;
+use bevy_pkv::PkvStore;
 use bevy_simple_text_input::{TextInputPlugin, TextInputSystem};
 
 pub mod flower;
@@ -19,9 +20,6 @@ pub mod ui_overview;
 pub const SCREEN_WIDTH: f32 = 1280.0;
 pub const SCREEN_HEIGHT: f32 = 720.0;
 const TICK_TIME: f64 = 1.0 / 60.0;
-
-#[derive(Component)]
-pub struct Clickable;
 
 #[derive(Resource, Default)]
 pub struct PlayerInfo {
@@ -74,6 +72,7 @@ fn main() {
     app.insert_resource(Time::<Fixed>::from_seconds(TICK_TIME));
     app.insert_state(GameState::Login);
     app.insert_resource(PlayerInfo::default());
+    app.insert_resource(PkvStore::new("pagnany", "flower"));
     app.add_systems(Startup, setup);
     app.add_systems(
         FixedUpdate,
@@ -95,7 +94,15 @@ fn main() {
     app.run();
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup(mut commands: Commands, asset_server: Res<AssetServer>, mut pkv: ResMut<PkvStore>) {
+    // Save String
+    if let Ok(username) = pkv.get::<String>("username") {
+        info!("Welcome back {username}");
+    } else {
+        pkv.set_string("username", "pagnany")
+            .expect("failed to store username");
+    }
+
     let font = asset_server.load("fonts/FiraSans-Bold.ttf");
     let text_font = TextFont {
         font: font.clone(),

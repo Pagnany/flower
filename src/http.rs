@@ -10,12 +10,14 @@ pub struct LoginData {
 
 #[derive(Debug, Clone, Serialize, Default)]
 pub struct Login {
+    pub action: String,
     pub username: String,
     pub password: String,
 }
 
 pub fn send_request_login(mut ev_request: EventWriter<TypedRequest<LoginData>>) {
     let login = Login {
+        action: "login".to_string(),
         username: "Pagnany".to_string(),
         password: "test".to_string(),
     };

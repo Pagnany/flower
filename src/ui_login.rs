@@ -81,6 +81,7 @@ pub fn text_input_listener(
 
                 // request token from server
                 let login = crate::http::Login {
+                    action: "login".to_string(),
                     username: player_info.name.clone(),
                     password: player_info.password.clone(),
                 };

@@ -20,6 +20,7 @@ codegen-units = 1
 bevy = { version = "0.15.0", features = ["wayland", "dynamic_linking"] }
 bevy_common_assets = { version = "0.12.0", features = ["json"] }
 bevy_http_client = "0.7.0"
+bevy_pkv = "0.12.0"
 bevy_simple_text_input = "0.10.1"
 chrono = "0.4.39"
 serde = { version = "1.0.217", features = ["derive"] }
